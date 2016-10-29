@@ -5,7 +5,6 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-import com.droidconuk.frasam.preparemyorders.MainActivity;
 import com.droidconuk.frasam.preparemyorders.R;
 import com.droidconuk.frasam.preparemyorders.adapters.ProductListAdapter;
 import com.droidconuk.frasam.preparemyorders.model.Product;
@@ -31,8 +30,6 @@ public class ProductListFragment extends Fragment {
 
     @ViewById
     ListView fragmentListView;
-
-    String fragmenType = "product_list";
 
     ProductListAdapter adapter;
 
