@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.MultiFormatWriter;
@@ -26,6 +27,9 @@ public class CartQrCodeActivity extends AppCompatActivity {
     @ViewById
     protected ImageView qrcode_imageview;
 
+    @ViewById
+    protected TextView cartCodeTextView;
+
     @Extra
     String cartId;
 
@@ -34,8 +38,9 @@ public class CartQrCodeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart_qr_code);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Cart code");
         setSupportActionBar(toolbar);
-
+        cartCodeTextView.setText(cartId);
         Bitmap bitmap;
 
         try {

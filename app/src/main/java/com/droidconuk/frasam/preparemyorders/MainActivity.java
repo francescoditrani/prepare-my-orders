@@ -1,6 +1,5 @@
 package com.droidconuk.frasam.preparemyorders;
 
-import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -14,7 +13,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -65,7 +63,7 @@ public class MainActivity extends AppCompatActivity
 
         mCart = new Cart();
         mDatabase = FirebaseDatabase.getInstance();
-        cartId = UUID.randomUUID().toString();
+        cartId = "cart_"+UUID.randomUUID().toString();
 
 
         Fragment fragment = new ProductListFragment_().builder()
@@ -112,15 +110,6 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-
-//        //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -169,8 +158,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-        if(event.values[event.values.length-1] < -150) {
-            Log.i("VALUEEEE", String.valueOf(event.values[event.values.length-1]));
+        if(event.values[event.values.length-1] < -100) {
             CartQrCodeActivity_.intent(this).extra("cartId", cartId).start();
             mSensorManager.unregisterListener(this, mMagnetometer);
         }
