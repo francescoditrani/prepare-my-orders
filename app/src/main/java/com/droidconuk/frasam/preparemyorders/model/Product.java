@@ -1,10 +1,12 @@
 package com.droidconuk.frasam.preparemyorders.model;
 
+import java.io.Serializable;
+
 /**
  * Created by francescoditrani on 29/10/16.
  */
 
-public class Product {
+public class Product implements Serializable{
 
     private String name;
     private Double price;

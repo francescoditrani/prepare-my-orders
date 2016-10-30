@@ -1,5 +1,10 @@
 package com.droidconuk.frasam.preparemyorders;
 
+import android.content.Intent;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -9,6 +14,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -22,20 +28,23 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.androidannotations.annotations.EActivity;
 
+import java.util.UUID;
+
 
 @EActivity
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener,
         ProductListFragment.ProductListFragmentListener,
-        GenericYesNoFragmentDialog.GenericYesNoFragmentDialogListener
-{
+        GenericYesNoFragmentDialog.GenericYesNoFragmentDialogListener,
+        SensorEventListener{
 
     public static final String CONFIRM_ADD_PRODUCT = "add_product";
     private Cart mCart;
     private String currentProductCode;
     private FirebaseDatabase mDatabase;
-
-
+    static private SensorManager mSensorManager;
+    static private Sensor mMagnetometer;
+    private String cartId;
 
 
     @Override
@@ -56,15 +65,33 @@ public class MainActivity extends AppCompatActivity
 
         mCart = new Cart();
         mDatabase = FirebaseDatabase.getInstance();
+        cartId = UUID.randomUUID().toString();
 
-        Fragment fragment =  new ProductListFragment_().builder()
+
+        Fragment fragment = new ProductListFragment_().builder()
                 .arg("productList", FakeDB.halloweenProducts).build();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.mainLayout, fragment)
                 .addToBackStack(null)
                 .commit();
+
+
+
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        mSensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+        mMagnetometer = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+        mSensorManager.registerListener(this, mMagnetometer, SensorManager.SENSOR_DELAY_GAME);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mSensorManager.unregisterListener(this, mMagnetometer);
+    }
 
     @Override
     public void onBackPressed() {
@@ -88,12 +115,12 @@ public class MainActivity extends AppCompatActivity
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+//        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        //noinspection SimplifiableIfStatement
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -133,25 +160,24 @@ public class MainActivity extends AppCompatActivity
                 .newInstance("", product.getName(), CONFIRM_ADD_PRODUCT).show(fm, CONFIRM_ADD_PRODUCT);
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Pass the event to ActionBarDrawerToggle, if it returns
-//        // true, then it has handled the app icon touch event
-//        if (mDrawerToggle.onOptionsItemSelected(item)) {
-//            return true;
-//        }
-//        // Handle your other action bar items...
-//        switch (item.getItemId()) {
-//            case R.id.device_id:
-//                showDeviceID();
-//                return true;
-//            default:
-//                return super.onOptionsItemSelected(item);
-//        }
-//    }
+
     @Override
     public void onYesGenericDialogFragment(String requestCode) {
         mCart.addItemToCart(currentProductCode);
-        mDatabase.getReference("hackathon-uk-2016").setValue(mCart);
+        mDatabase.getReference(cartId).setValue(mCart);
+    }
+
+    @Override
+    public void onSensorChanged(SensorEvent event) {
+        if(event.values[event.values.length-1] < -150) {
+            Log.i("VALUEEEE", String.valueOf(event.values[event.values.length-1]));
+            CartQrCodeActivity_.intent(this).extra("cartId", cartId).start();
+            mSensorManager.unregisterListener(this, mMagnetometer);
+        }
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
     }
 }

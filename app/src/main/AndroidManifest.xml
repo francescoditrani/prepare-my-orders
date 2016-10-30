@@ -19,10 +19,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CartActivity"
+            android:name=".CartActivity_"
             android:label="@string/title_activity_cart"
             android:theme="@style/AppTheme.NoActionBar" />
-
+        <activity
+            android:name=".CartQrCodeActivity_"
+            android:label="@string/title_activity_cart_qr_code"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>
