@@ -51,7 +51,7 @@ public class ProductListFragment extends Fragment {
 
         public void onProductFragmentItemClick(Product product);
 
-        public void onProductFragmentItemLongClick(Product product);
+//        public void onProductFragmentItemLongClick(Product product);
 
 //        public Observable<Boolean> genericDialog(Context context, int title, int message);
 
@@ -69,14 +69,14 @@ public class ProductListFragment extends Fragment {
         });
 
 
-        fragmentListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
-                Product product = (Product)adapterView.getItemAtPosition(position);
-                mListener.onProductFragmentItemLongClick(product);
-                return true;
-            }
-        });
+//        fragmentListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//            @Override
+//            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long id) {
+//                Product product = (Product)adapterView.getItemAtPosition(position);
+//                mListener.onProductFragmentItemLongClick(product);
+//                return true;
+//            }
+//        });
     }
 
 
@@ -95,9 +95,9 @@ public class ProductListFragment extends Fragment {
 
     }
 
-    public void refreshAdapterWithList(ArrayList<Product> productList){
-        this.productList = productList;
-        adapter = new ProductListAdapter(getActivity(),productList );
-        fragmentListView.setAdapter(adapter);
-    }
+//    public void refreshAdapterWithList(ArrayList<Product> productList){
+//        this.productList = productList;
+//        adapter = new ProductListAdapter(getActivity(),productList );
+//        fragmentListView.setAdapter(adapter);
+//    }
 }

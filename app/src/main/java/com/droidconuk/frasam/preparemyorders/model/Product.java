@@ -6,21 +6,29 @@ package com.droidconuk.frasam.preparemyorders.model;
 
 public class Product {
 
-    String name;
-    Double price;
-    String title;
-    String description;
+    private String name;
+    private Double price;
+    private String title;
+    private String description;
+    private String barcode;
 
-    public Product(String name, Double price, String title, String description) {
+    public Product() {
+    }
+
+    public Product(String name, Double price, String title, String description, String barcode) {
         this.name = name;
         this.price = price;
         this.title = title;
         this.description = description;
+        this.barcode = barcode;
     }
 
-    public Product(String name, Double price) {
-        this.name = name;
-        this.price = price;
+    public String getBarcode() {
+        return barcode;
+    }
+
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
     }
 
     public String getTitle() {

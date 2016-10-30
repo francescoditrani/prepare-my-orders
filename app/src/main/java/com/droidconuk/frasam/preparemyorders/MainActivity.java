@@ -3,6 +3,7 @@ package com.droidconuk.frasam.preparemyorders;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -11,19 +12,31 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.droidconuk.frasam.preparemyorders.dialogs.GenericYesNoFragmentDialog;
 import com.droidconuk.frasam.preparemyorders.fakedb.FakeDB;
 import com.droidconuk.frasam.preparemyorders.fragments.ProductListFragment;
 import com.droidconuk.frasam.preparemyorders.fragments.ProductListFragment_;
+import com.droidconuk.frasam.preparemyorders.model.Cart;
 import com.droidconuk.frasam.preparemyorders.model.Product;
+import com.google.firebase.database.FirebaseDatabase;
 
 import org.androidannotations.annotations.EActivity;
 
-import java.util.ArrayList;
 
 @EActivity
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, ProductListFragment.ProductListFragmentListener
+        implements NavigationView.OnNavigationItemSelectedListener,
+        ProductListFragment.ProductListFragmentListener,
+        GenericYesNoFragmentDialog.GenericYesNoFragmentDialogListener
 {
+
+    public static final String CONFIRM_ADD_PRODUCT = "add_product";
+    private Cart mCart;
+    private String currentProductCode;
+    private FirebaseDatabase mDatabase;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,40 +54,16 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        mCart = new Cart();
+        mDatabase = FirebaseDatabase.getInstance();
 
-        ArrayList<Product> productItemList = new ArrayList<>(FakeDB.halloweenProducts.values());
         Fragment fragment =  new ProductListFragment_().builder()
-                .arg("productList", productItemList).build();
+                .arg("productList", FakeDB.halloweenProducts).build();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.mainLayout, fragment)
                 .addToBackStack(null)
                 .commit();
     }
-
-
-
-//    private void setListnerToListView() {
-//        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-//                Object item = adapterView.getItemAtPosition(position);
-//                String itemValue = item.toString();
-//            }
-//        });
-//    }
-//
-//
-//    private void setAdapterToListview() {
-//        String[] stringArray = new String[2];
-//        stringArray[0] = "uno";
-//        stringArray[1] = "due";
-//        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(
-//                MainActivity.this,
-//                android.R.layout.simple_list_item_1,
-//                stringArray
-//                );
-//        listview.setAdapter(arrayAdapter);
-//    }
 
 
     @Override
@@ -127,6 +116,8 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_send) {
 
+        } else if (id == R.id.cart) {
+
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -136,11 +127,31 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onProductFragmentItemClick(Product product) {
-
+        currentProductCode = product.getBarcode();
+        FragmentManager fm = getSupportFragmentManager();
+        GenericYesNoFragmentDialog
+                .newInstance("", product.getName(), CONFIRM_ADD_PRODUCT).show(fm, CONFIRM_ADD_PRODUCT);
     }
 
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Pass the event to ActionBarDrawerToggle, if it returns
+//        // true, then it has handled the app icon touch event
+//        if (mDrawerToggle.onOptionsItemSelected(item)) {
+//            return true;
+//        }
+//        // Handle your other action bar items...
+//        switch (item.getItemId()) {
+//            case R.id.device_id:
+//                showDeviceID();
+//                return true;
+//            default:
+//                return super.onOptionsItemSelected(item);
+//        }
+//    }
     @Override
-    public void onProductFragmentItemLongClick(Product product) {
-
+    public void onYesGenericDialogFragment(String requestCode) {
+        mCart.addItemToCart(currentProductCode);
+        mDatabase.getReference("hackathon-uk-2016").setValue(mCart);
     }
 }
