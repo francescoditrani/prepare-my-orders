@@ -5,7 +5,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.Extra;
 
 @EActivity
 public class CartActivity extends AppCompatActivity {

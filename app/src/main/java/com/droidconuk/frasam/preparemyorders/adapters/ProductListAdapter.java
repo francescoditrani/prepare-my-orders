@@ -51,7 +51,6 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         ViewHolder viewHolder;
-        int type = getItemViewType(position);
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         if (convertView == null) {
@@ -66,43 +65,18 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         Product product = products.get(position);
         viewHolder.nome_prodotto.setText(String.valueOf(product.getName()));
         viewHolder.titolo_prodotto.setText(String.valueOf(product.getTitle()));
-//        viewHolder.price_prodotto.setText(String.valueOf(product.getPrice()));
         viewHolder.descrizione_prodotto.setText(String.valueOf(product.getDescription()));
-//        setBasePropertyValue(viewHolder, product);
-//        if (type == TYPE_ASSOCIATED) {
-//            if (product.bmProductCode != null && !product.bmProductCode.isEmpty()) {
-//                viewHolder.associated_with.setText("Associato con prodotto " + product.bmProductCode);
-//            } else {
-//                viewHolder.associated_with.setText("");
-//            }
-//
-//            if (product.bmName != null && !product.bmName.isEmpty()) {
-//                viewHolder.associated_name.setText(product.bmName);
-//            } else {
-//                viewHolder.associated_name.setText("");
-//            }
-//        }
+        viewHolder.textViewPrice.setText(String.valueOf("£"+product.getPrice()));
+
         return convertView;
     }
 
-//    private void setBasePropertyValue(ViewHolder viewHolder, LMProduct lmProduct) {
-//        viewHolder.referenza_prodotto.setText(String.valueOf(lmProduct._id));
-//        viewHolder.titoloweb_prodotto.setText(String.valueOf(lmProduct.titoloWeb));
-//        viewHolder.nome_prodotto.setText(String.valueOf(lmProduct.descrizioneCommerciale));
-//        if (lmProduct.urlImmagine != null && !lmProduct.urlImmagine.equals("")) {
-//            Picasso.with(context).load(lmProduct.urlImmagine + "/75/75/PNG").into(viewHolder.productImage);
-//        }
-//    }
-//
-//    private void setAssociatesViewholderProperties(View convertView, ViewHolder viewHolder) {
-//        viewHolder.associated_with = (TextView) convertView.findViewById(R.id.associated_with);
-//        viewHolder.associated_name = (TextView) convertView.findViewById(R.id.associated_name);
-//    }
-//
+
     private void setBaseViewholderProperties(View convertView, ViewHolder viewHolder) {
         viewHolder.titolo_prodotto = (TextView) convertView.findViewById(R.id.titolo_prodotto);
         viewHolder.descrizione_prodotto = (TextView) convertView.findViewById(R.id.descrizione_prodotto);
         viewHolder.nome_prodotto = (TextView) convertView.findViewById(R.id.nome_prodotto);
+        viewHolder.textViewPrice = (TextView) convertView.findViewById(R.id.textViewPrice);
     }
 
 
@@ -110,11 +84,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         public TextView nome_prodotto;
         public TextView titolo_prodotto;
         public TextView descrizione_prodotto;
-//        public TextView price_prodotto;
-
-//        public ImageView productImage;
-//        public TextView associated_with;
-//        public TextView associated_name;
+        public TextView textViewPrice;
 
     }
 }

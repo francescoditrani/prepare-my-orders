@@ -22,7 +22,6 @@ public class CartQrCodeActivity extends AppCompatActivity {
     public final static int WHITE = 0xFFFFFFFF;
     public final static int BLACK = 0xFF000000;
     public final static int WIDTH = 1000;
-    public final static int HEIGHT = 1000;
 
     @ViewById
     protected ImageView qrcode_imageview;
